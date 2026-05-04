@@ -11,4 +11,4 @@ alias egrep='egrep --color=auto'
 alias vi='vim'
 
 # rename rm
-alias rm='trash -F'   # mac
+alias rm='trash'   # mac

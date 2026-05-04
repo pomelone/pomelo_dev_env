@@ -11,14 +11,14 @@ alias egrep='egrep --color=auto'
 alias vi='vim'
 
 # rename rm
-function _rm_back() {
+_rm_back() {
     /bin/mv --backup=t $@ $HOME/.Trash/
 }
 alias rm=_rm_back
 
 # clean .Trash
-function clean_trash() {
-    echo -n 'clean .Trash? (Y/n): '
+clean_trash() {
+    echo -n 'Permanently delete all items in the .Trash folder? (Y/N): '
     read confirm
     [[ "${confirm}" == 'Y' ]] && /bin/rm -rf $HOME/.Trash/*
 }

@@ -181,4 +181,3 @@ set nobackup   " make a backup before overwriting a file
 set history=5000   " keep 500 commands and 500 search patterns in the history
 set wildmenu   " use menu for command line completion [enable wildmenu, statusline may not been auto-changed]
 set wildmode=full   "  mode for 'wildchar' command-line expansion
-
