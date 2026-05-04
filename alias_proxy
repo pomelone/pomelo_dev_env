@@ -1,7 +1,7 @@
 
 
-# cmd proxy
-function proxy_cmd() {
+# proxy
+proxy_cmd() {
     if [[ "$1" == 'start' ]]; then
         if [[ -z "$2" ]]; then
             echo 'usage: proxy_cmd (start | stop) proxy_port'

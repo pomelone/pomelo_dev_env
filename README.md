@@ -1,9 +1,8 @@
 # Installation Steps
 
 ## Common Environment
-1. Install **wget, curl, git, gcc, g++, gdb, vim, zip, unzip**, option package: **tldr, tmux**
 
-    `sudo apt install wget curl git gcc g++ gdb vim zip unzip`
+1. Install **wget, curl, git, gcc, g++, gdb, vim, zip, unzip**, option package: **tldr, tmux**
 
 2. Execute **setup.sh**
 
@@ -11,7 +10,7 @@
 
 4. Vim support syntax highlighting
 
-    If a supported file type exists but doesn't work, add it to the configuration file: **.vimrc**:
+    If a supported file type exists but doesn't work, add [vim](https://github.com/vim/vim.git) plugin to `~/vim/` and configuration file: **.vimrc**:
 
     `au BufNewFile,BufRead *.scala setf scala`
 
@@ -19,29 +18,42 @@
 
     `set runtimepath+=~/.vim`
 
+    ```bash
+    git clone https://github.com/vim/vim.git
+
+    cp -f ./vim/runtime/filetype.vim ~/.vim/
+
+    [[ ! -d ~/.vim/ftplugin ]] && mkdir ~/.vim/ftplugin
+    cp -f ./vim/runtime/ftplugin/*.vim ~/.vim/ftplugin/
+
+    [[ ! -d ~/.vim/syntax ]] && mkdir ~/.vim/syntax
+    cp -f ./vim/runtime/syntax/*.vim ~/.vim/syntax/
+    ```
+
 3. Install git & bash completion
     ```bash
     # install
-    [ ! -d ~/.bash ] && mkdir ~/.bash
+    [ ! -d ~/.bin/completion ] && mkdir -p ~/.bin/completion
     
-    cd ~/.bash/ && git clone https://github.com/scop/bash-completion.git && cd -
+    mkdir ~/.bin/completion/bash && cd ~/.bin/completion/bash && git clone https://github.com/scop/bash-completion.git && cd -
 
-    mkdir ~/.bash/git-completion && cd ~/.bash/git-completion && wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash && cd -
+    mkdir ~/.bin/completion/git && cd ~/.bin/completion/git && wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash && cd -
 
 
     # .bashrc conf
     # bash completion
     # https://github.com/scop/bash-completion
-    [ -f $HOME/.bash/bash-completion/bash_completion ] && \
-        . $HOME/.bash/bash-completion/bash_completion
+    [ -f $HOME/.bin/completion/bash/bash_completion ] && \
+        . $HOME/.bin/completion/bash/bash_completion
     
     # git completion
     # https://github.com/git/git/tree/master/contrib/completion
-    [ -f $HOME/.bash/git-completion/git-completion.bash ] && \
-        . $HOME/.bash/git-completion/git-completion.bash
+    [ -f $HOME/.bin/completion/git/git-completion.bash ] && \
+        . $HOME/.bin/completion/git/git-completion.bash
     ```
 
 ## Conda
+
 1. Install **anaconda**
 
     * download [miniconda](https://docs.conda.io/projects/miniconda) ~~[anaconda installer](https://www.anaconda.com/products/individual#Downloads)~~
@@ -73,6 +85,7 @@
     * install a specific version package: `conda install package=version` or `pip install package==version`
 
 ## Vim Plugin
+
 1. Install **nvm** and **node.js** ( lower than **coc.nvim** required version )
 
     * open [nvm website](https://github.com/nvm-sh/nvm), follow the manual to install

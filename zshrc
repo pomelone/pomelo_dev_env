@@ -1,3 +1,4 @@
+# color name
 bold='%{%B%}'
 un_bold='%{%b%}'
 under_lined='%{%U%}'
@@ -75,12 +76,10 @@ unsetopt prompt_bang
 setopt prompt_subst
 
 # git prompt
-function prompt_git()
+prompt_git()
 {
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     if [[ -n "${branch}" ]] {
-        #local work_status='●'
-        #local cache_status='●'
         local work_status='+'
         local work_color="${red}"
         local cache_status='+'
@@ -123,5 +122,4 @@ export PATH="${BASE_PATH}"
 
 
 # alias
-test -f $HOME/.alias && . $HOME/.alias
-
+[[ -f $HOME/.alias ]] && . $HOME/.alias

@@ -13,20 +13,11 @@ white='\[\033[37m\]'
 defalut='\[\033[39m\]'
 
 
-# confirm color prompt
-case "$TERM" in
-    xterm*|konsole*|rxvt*) color_prompt='yes';;
-esac
-color_prompt='yes'
-
-
 # git prompt
-function prompt_git()
+prompt_git()
 {
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     if [ -n "${branch}" ]; then
-        #local work_status='●'
-        #local cache_status='●'
         local work_status='+'
         local work_color='\033[31m'
         local cache_status='+'
@@ -40,55 +31,32 @@ function prompt_git()
             cache_status='-'
             cache_color='\033[32m'
         fi
-        if [ "${color_prompt}" == 'yes' ]; then
-            echo -e "\033[1m\033[37m<\033[34m${branch}${work_color}${work_status}${cache_color}${cache_status}\033[37m>\033[0m"
-        else
-            echo -e "<${branch}${work_status}${cache_status}>"
-        fi
+        echo -e "\033[1m\033[37m<\033[34m${branch}${work_color}${work_status}${cache_color}${cache_status}\033[37m>\033[0m"
     fi
 }
 
 
 # result status prompt
-function prompt_status()
+prompt_status()
 {
     local status=$?
-    if [ "${color_prompt}" == 'yes' ]; then
-        if [ ${status} -eq 0 ]; then
-            echo -e '\033[1m\033[32m- \033[0m'
-        else
-            echo -e '\033[1m\033[31m! \033[0m'
-        fi
+    if [ ${status} -eq 0 ]; then
+        echo -e '\033[1m\033[32m- \033[0m'
     else
-        if [ ${status} -eq 0 ]; then
-            echo -e '- '
-        else
-            echo -e '! '
-        fi
+        echo -e '\033[1m\033[31m! \033[0m'
     fi
 }
 
 
 # PS1
-if [ "${color_prompt}" == 'yes' ]; then
-    PROMPT_INFO="${bold}${white}[${green}\u${yellow}@${magenta}\h${reset_all}:${under_lined}\w${reset_all}${bold}${white}]${reset_all}"
-    PROMPT_NEWLINE='\n'
-    PROMPT_SUFFIX_ROOT="${bold}${red}\\$ ${reset_all}"
-    PROMPT_SUFFIX_USER="${bold}${cyan}\\$ ${reset_all}"
-    if [ $UID -eq 0 ]; then
-        export PS1="\$(prompt_status)${PROMPT_INFO}${PROMPT_NEWLINE}${PROMPT_SUFFIX_ROOT}"
-    else
-        #export PS1='$(prompt_status)'"${PROMPT_INFO}"'$(prompt_git)'"${PROMPT_NEWLINE}${PROMPT_SUFFIX_USER}"
-        export PS1="\$(prompt_status)${PROMPT_INFO}\$(prompt_git)${PROMPT_NEWLINE}${PROMPT_SUFFIX_USER}"
-    fi
+PROMPT_INFO="${bold}${white}[${green}\u${yellow}@${magenta}\h${reset_all}:${under_lined}\w${reset_all}${bold}${white}]${reset_all}"
+PROMPT_NEWLINE='\n'
+PROMPT_SUFFIX_ROOT="${bold}${red}\\$ ${reset_all}"
+PROMPT_SUFFIX_USER="${bold}${cyan}\\$ ${reset_all}"
+if [ $UID -eq 0 ]; then
+    export PS1="\$(prompt_status)${PROMPT_INFO}${PROMPT_NEWLINE}${PROMPT_SUFFIX_ROOT}"
 else
-    #export PS1='☁ [\u@\h:\w]$(prompt_git)\n➜ '
-    #export PS1='☘ [\u@\h:\w]$(prompt_git)\n♪ '
-    if [ $UID -eq 0 ]; then
-        export PS1='$(prompt_status)[\u@\h:\w]\n\$ '
-    else
-        export PS1='$(prompt_status)[\u@\h:\w]$(prompt_git)\n\$ '
-    fi
+    export PS1="\$(prompt_status)${PROMPT_INFO}\$(prompt_git)${PROMPT_NEWLINE}${PROMPT_SUFFIX_USER}"
 fi
 
 
@@ -112,9 +80,7 @@ shopt -s interactive_comments
 export HISTFILE="$HOME/.bash_history"
 export HISTSIZE=100000
 export HISTFILESIZE=100000
-# export HISTTIMEFORMAT="%F "
 export HISTCONTROL='ignorespace:erasedups'
-# export HISTIGNORE='ls:ll:ls -alh:pwd:clear:history'
 export PROMPT_COMMAND='history -a'
 set -o history
 
@@ -133,5 +99,4 @@ export PATH="${BASE_PATH}"
 
 
 # alias
-test -f $HOME/.alias && . $HOME/.alias
-
+[ -f $HOME/.alias ] && . $HOME/.alias
