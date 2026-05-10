@@ -33,7 +33,7 @@
 3. Install git & bash completion
     ```bash
     # install
-    [ ! -d ~/.bin/completion ] && mkdir -p ~/.bin/completion
+    [[ ! -d ~/.bin/completion ]] && mkdir -p ~/.bin/completion
     
     mkdir ~/.bin/completion/bash && cd ~/.bin/completion/bash && git clone https://github.com/scop/bash-completion.git && cd -
 
@@ -43,12 +43,12 @@
     # .bashrc conf
     # bash completion
     # https://github.com/scop/bash-completion
-    [ -f $HOME/.bin/completion/bash/bash_completion ] && \
+    [[ -f $HOME/.bin/completion/bash/bash_completion ]] && \
         . $HOME/.bin/completion/bash/bash_completion
     
     # git completion
     # https://github.com/git/git/tree/master/contrib/completion
-    [ -f $HOME/.bin/completion/git/git-completion.bash ] && \
+    [[ -f $HOME/.bin/completion/git/git-completion.bash ]] && \
         . $HOME/.bin/completion/git/git-completion.bash
     ```
 

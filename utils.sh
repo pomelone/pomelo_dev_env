@@ -82,7 +82,8 @@ backup_file() {
 
 check_command() {
     local cmd="$1"
-    if command -v ${cmd} &> /dev/null; then
+    # if command -v ${cmd} &> /dev/null; then
+    if which ${cmd} &> /dev/null; then
         return 0
     fi
     log_warning "Command [${cmd}] not found!"

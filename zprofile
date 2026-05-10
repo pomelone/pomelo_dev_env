@@ -1,2 +1,2 @@
 # source zshrc
-[ -f $HOME/.zshrc ] && . $HOME/.zshrc
+[[ -f $HOME/.zshrc ]] && . $HOME/.zshrc
