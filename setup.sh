@@ -17,16 +17,16 @@ check_os() {
         Linux)
             [[ -f /etc/os-release ]] && . /etc/os-release && OS_ID="${ID}"
             case "${OS_ID}" in
-                ubuntu|debian) PKG_MANAGER='apt' ;;
-                centos|rhel|fedora|rocky|almalinux) PKG_MANAGER='dnf' ;;   # not yum
+                debian|ubuntu) PKG_MANAGER='apt' ;;
+                rhel|centos|fedora|almalinux|rocky) PKG_MANAGER='dnf' ;;   # not yum
                 arch|manjaro) PKG_MANAGER='pacman' ;;
                 suse|opensuse*) PKG_MANAGER='zypper' ;;
                 *) log_error "OS: ${OS}(${OS_ID}) not support!"; exit 1 ;;
             esac
             ;;
         Darwin)
-            PKG_MANAGER='brew'
             OS_ID='Mac'
+            PKG_MANAGER='brew'
             ;;
         *) log_error "OS: ${OS} not support!"; exit 1 ;;
     esac
@@ -72,7 +72,7 @@ alias_config() {
 
 
 shell_config() {
-    ask_yes_no "Setup shell?" || return 0
+    ask_yes_no 'Setup shell?' || return 0
     log_ok 'Setting shell ...'
 
     local running=true
@@ -83,7 +83,7 @@ shell_config() {
         ask 'Input the shell to setup (bash/zsh/Q):'
         read shell_name
 
-        if [[ ${shell_name} =~ ^[Qq]$ ]]; then
+        if [[ "${shell_name}" =~ ^[Qq]$ ]]; then
             log_error 'Setup shell failed!'
             return 0
         fi
@@ -103,6 +103,7 @@ shell_config() {
                 backup_file ~/.inputrc
                 log_info 'Copying to ~/.inputrc'
                 cp -f ./inputrc ~/.inputrc
+                ask_yes_no 'Install bash-completion?' && pkg_install ${PKG_MANAGER} bash-completion
                 running=false
                 ;;
             # setup zsh
@@ -113,6 +114,7 @@ shell_config() {
                 backup_file ~/.zprofile
                 log_info 'Copying to ~/.zprofile'
                 cp -f ./zprofile ~/.zprofile
+                [[ "${OS}" == 'Darwin' ]] && ask_yes_no 'Install zsh-completions?' && pkg_install ${PKG_MANAGER} zsh-completions
                 running=false
                 ;;
             *) log_warning "Shell [${shell_name}] not matched, please try again." ;;
@@ -129,27 +131,48 @@ shell_config() {
 
 
 git_config() {
-    ask_yes_no "Setup git?" || return 0
+    ask_yes_no 'Setup git?' || return 0
     log_ok 'Setting git ...'
 
-    # check git
+    # check git, git-lfs
     check_command git || pkg_install ${PKG_MANAGER} git
+    check_command git-lfs || pkg_install ${PKG_MANAGER} git-lfs
 
     local GIT_STORE='store'
-    [[ "${OS}" == 'Darwin' ]] && GIT_STORE='osxkeychain'
+    case "${OS}" in
+        Linux)
+            if ! check_command pass; then
+                case "${OS_ID}" in
+                    suse|opensuse*)  pkg_install ${PKG_MANAGER} password-store ;;
+                    *) pkg_install ${PKG_MANAGER} pass ;;
+                esac
+            fi
+            if ! check_command pass-git-helper; then
+                case "${OS_ID}" in
+                    debian|ubuntu) pkg_install ${PKG_MANAGER} pass-git-helper ;;
+                    suse|opensuse*) pkg_install ${PKG_MANAGER} python3-pass-git-helper ;;
+                    *) log_warning 'Install via python3-pip' ;;
+                esac
+            fi
+            GIT_STORE='!pass-git-helper -m ~/.password-store/pass-git-helper/git-pass-mapping.ini $@'
+            ;;
+        Darwin) GIT_STORE='osxkeychain' ;;
+        *) log_error "OS: ${OS} not support!"; exit 1 ;;
+    esac
+    log_ok "Git Credential Helper: ${GIT_STORE}"
 
     log_info 'Setting git global config ...'
     git config --global init.defaultBranch main
     git config --global core.autocrlf input   # true for Windows
-    git config --global credential.helper ${GIT_STORE}  # config credential type
     git config --global credential.useHttpPath true  # config match git path
+    git config --global credential.helper "${GIT_STORE}"  # config credential type
 
     log_ok 'Setup git complete.'
 }
 
 
 vim_config() {
-    ask_yes_no "Setup vim?" || return 0
+    ask_yes_no 'Setup vim?' || return 0
     log_ok 'Setting vim ...'
 
     # check vim
@@ -165,7 +188,7 @@ vim_config() {
 
 
 tmux_config() {
-    ask_yes_no "Setup tmux?" || return 0
+    ask_yes_no 'Setup tmux?' || return 0
     log_ok 'Setting tmux ...'
 
     # check tmux
@@ -190,7 +213,7 @@ tmux_config() {
 
 
 proxy_config() {
-    ask_yes_no "Setup proxy?" || return 0
+    ask_yes_no 'Setup proxy?' || return 0
     log_ok 'Setting proxy ...'
 
     log_info 'Setting proxy alias to ~/.alias'
