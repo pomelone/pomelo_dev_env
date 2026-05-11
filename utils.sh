@@ -82,7 +82,8 @@ backup_file() {
 
 check_command() {
     local cmd="$1"
-    if command -v ${cmd} &> /dev/null; then
+    # if command -v ${cmd} &> /dev/null; then
+    if which ${cmd} &> /dev/null; then
         return 0
     fi
     log_warning "Command [${cmd}] not found!"
@@ -98,11 +99,7 @@ pkg_install() {
     log_info "Start installing $@ ..."
     case "${pkg_manager}" in
         brew) brew install "$@" ;;
-        apt) ${pkg_prefix} apt install "$@" ;;
-        yum) ${pkg_prefix} yum install "$@" ;;
-        dnf) ${pkg_prefix} dnf install "$@" ;;
         pacman) ${pkg_prefix} pacman -S "$@" ;;
-        zypper) ${pkg_prefix} zypper install "$@" ;;
-        *) log_error "${pkg_manager} not support!"; return 1 ;;
+        *) ${pkg_prefix} ${pkg_manager} install "$@" ;;
     esac
 }

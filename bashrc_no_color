@@ -2,7 +2,7 @@
 prompt_git()
 {
     local branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-    if [ -n "${branch}" ]; then
+    if [[ -n "${branch}" ]]; then
         local work_status='+'
         local cache_status='+'
         if ! git ls-files --others --exclude-standard --directory --no-empty-directory --error-unmatch -- ':/*' &> /dev/null && \
@@ -21,7 +21,7 @@ prompt_git()
 prompt_status()
 {
     local status=$?
-    if [ ${status} -eq 0 ]; then
+    if [[ ${status} -eq 0 ]]; then
         echo -e '- '
     else
         echo -e '! '
@@ -30,7 +30,7 @@ prompt_status()
 
 
 # PS1
-if [ $UID -eq 0 ]; then
+if [[ $UID -eq 0 ]]; then
     export PS1='$(prompt_status)[\u@\h:\w]\n\$ '
 else
     export PS1='$(prompt_status)[\u@\h:\w]$(prompt_git)\n\$ '
@@ -63,17 +63,17 @@ set -o history
 
 
 # static link library
-[ -z "${BASE_LIBRARY_PATH}" ] && export BASE_LIBRARY_PATH="$LIBRARY_PATH"
+[[ -z "${BASE_LIBRARY_PATH}" ]] && export BASE_LIBRARY_PATH="$LIBRARY_PATH"
 export LIBRARY_PATH="${BASE_LIBRARY_PATH}"
 
 # dynamic link library
-[ -z "${BASE_LD_LIBRARY_PATH}" ] && export BASE_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+[[ -z "${BASE_LD_LIBRARY_PATH}" ]] && export BASE_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH="${BASE_LD_LIBRARY_PATH}"
 
 # env path
-[ -z "${BASE_PATH}" ] && export BASE_PATH="$HOME/.bin::$PATH"
+[[ -z "${BASE_PATH}" ]] && export BASE_PATH="$HOME/.bin:$PATH"
 export PATH="${BASE_PATH}"
 
 
 # alias
-[ -f $HOME/.alias ] && . $HOME/.alias
+[[ -f $HOME/.alias ]] && . $HOME/.alias

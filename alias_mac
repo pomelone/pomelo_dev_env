@@ -1,10 +1,10 @@
-alias sh='/bin/bash'
+alias sh='bash'
 alias ls='ls -FG'  # mac
 alias ll='ls -Alh'
 alias la='ls -A'
 alias l='ls -Clh'
-alias mv='/bin/mv -i'
-alias cp='/bin/cp -i'
+alias mv='command mv -i'
+alias cp='command cp -i'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
