@@ -151,7 +151,7 @@ git_config() {
                 case "${OS_ID}" in
                     debian|ubuntu) pkg_install ${PKG_MANAGER} pass-git-helper ;;
                     suse|opensuse*) pkg_install ${PKG_MANAGER} python3-pass-git-helper ;;
-                    *) log_warning 'Install via python3-pip' ;;
+                    *) log_warning 'Install pass-git-helper via python3-pip' ;;
                 esac
             fi
             GIT_STORE='!pass-git-helper -m ~/.password-store/pass-git-helper/git-pass-mapping.ini $@'
